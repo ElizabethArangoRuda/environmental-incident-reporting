@@ -6,11 +6,19 @@ The **Environmental Incident Reporting App** is a platform for reporting and vis
 
 ### Problem Space
 
-
+1. **Environmental Degradation**: Lack of effective monitoring and awareness of critical environmental challenges, such as pollution and deforestation.
+2. **Limited Public Engagement**: Insufficient platforms for community participation in environmental reporting and advocacy.
+3. **Data Fragmentation**: Difficulty accessing centralized, real-time environmental incident data for decision-making.
 
 ### User Profile
 
+- **Primary Users**:
+  - Environmental activists aiming to raise awareness and influence policy.
+  - Community members who witness and report incidents firsthand.
+  - Researchers and students analyzing environmental trends.
+  - Policymakers requiring real-time data for informed decisions.
 
+- **Use Case**: Users can report incidents, view them on an interactive map, and utilize the aggregated data for advocacy, research, or policymaking.
 
 ### Features
 
@@ -100,7 +108,6 @@ Endpoints
 • Add multimedia upload feature with cloud storage.
 • Implement pop-ups for detailed incident views.
 • Test and debug.
-
 
 ## Future Implementations
 

@@ -1,4 +1,6 @@
 import './Header.scss';
+import { Link } from "react-router-dom";
+
 
 function Header() {
     return (
@@ -7,9 +9,9 @@ function Header() {
                 <div className="header__links header__links--left">
                     <div className="header__logo">EAR</div>
                     <nav>
-                        <a href="/page1">Home</a>
-                        <a href="/page2">Map</a>
-                        <a href="/page3">Report</a>
+                        <Link to={`/`}>Home</Link>
+                        <Link  to={`/map`} className="nav__add-link">Map</Link>
+                        <Link to={`/report`}>Add an Issue</Link>
                     </nav>
                 </div>
                 <div className="header__links header__links--right">

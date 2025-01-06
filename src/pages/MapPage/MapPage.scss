@@ -1,0 +1,29 @@
+.map {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; // Full height of the viewport
+    margin: 0;
+  
+    .map__layout {
+      flex: 1; // Takes up remaining space between header and footer
+      display: flex;
+      flex-direction: column;
+    }
+  
+    .map__search {
+      padding: 1rem;
+      background-color: #f4f4f4; // Light background for the search section
+      text-align: center;
+    }
+  
+    .map__map {
+      flex: 1; // Ensures the map takes up all available space
+      display: flex;
+  
+      .map__container {
+        flex: 1;
+        height: 100%; // Full height of the parent
+        width: 100%; // Full width of the parent
+      }
+    }
+  }

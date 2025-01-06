@@ -1,0 +1,81 @@
+.add-report__form {
+  display: flex;
+  flex-direction: column; /* Stacks the elements vertically */
+  width: 100%; /* Makes the form occupy the full width */
+}
+
+.add-report__fields-wrapper {
+  display: flex;
+  flex-direction: column; /* Ensures that form fields are stacked one below the other */
+  width: 100%; /* Ensures that the fields occupy the full width of the container */
+}
+
+.add-report__details-wrapper,
+.add-report__contact-wrapper {
+  display: flex;
+  flex-direction: column; /* Ensures each section is displayed vertically */
+  gap: 20px; /* Adds space between fields within each section */
+}
+
+.add-report__input,
+.add-report__textarea,
+.add-report__select {
+  width: 100%; /* Ensures input fields take up the full width */
+  margin-top: 8px; /* Adds space between label and input */
+  padding: 10px; /* Padding for inputs for better visual appearance */
+  font-size: 16px; /* Adjust font size to make inputs readable */
+  border-radius: 5px; /* Optional: round the corners of input fields */
+}
+
+.add-report__label {
+  font-weight: bold; /* Makes labels stand out */
+  margin-bottom: 5px; /* Adds space between label and input */
+}
+
+.add-report__media-section {
+  margin-top: 20px; /* Adds space above the media section */
+}
+
+.add-report__media-options {
+  display: flex;
+  flex-direction: column;
+}
+
+.add-report__add-media-btn {
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  margin-bottom: 10px;
+  width: 100%; /* Makes the button occupy the full width */
+}
+
+.add-report__add-media-btn:hover {
+  background-color: #0056b3;
+}
+
+.add-report__actions-wrapper {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px; /* Adds space between Cancel and Submit buttons */
+}
+
+.add-report__input--error {
+  border-color: red;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.error-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+}

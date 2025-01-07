@@ -34,7 +34,7 @@ The **Environmental Incident Reporting App** is a platform for reporting and vis
 
 •	**Frontend**: React (web) or React Native (mobile)
 •	**Backend**: Node.js with Express.js
-•	**Database**: MongoDB
+•	**Database**: relational database MySQL
 •	**Mapping Tools**: Leaflet or Google Maps API
 •	**Cloud Storage**: AWS S3 or Firebase
 
@@ -76,7 +76,7 @@ Endpoints
 
 ### Prerequisites:
 • Node.js
-• MongoDB
+• mysql
 • Firebase/AWS credentials (for multimedia storage)
 
 ### Installation:
@@ -91,6 +91,9 @@ Endpoints
 3. Install dependencies:
    ```bash
    npm install
+   npm install react-router-dom
+   npm install axios
+   npm install -g sass
    ```
 4. Start the development server:
    ```bash

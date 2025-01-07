@@ -91,6 +91,8 @@ Endpoints
 3. Install dependencies:
    ```bash
    npm install
+   npm install react-router-dom
+   npm install axios
    ```
 4. Start the development server:
    ```bash

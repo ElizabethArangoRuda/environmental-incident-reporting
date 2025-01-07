@@ -13,10 +13,49 @@ function MapPage({ issueLocation }) {
       // Initialize the map centered at a default location
       map = L.map('map').setView([0, 0], 2); // Center at [0, 0] with zoom level 2
 
-      // Add OpenStreetMap tiles
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      // Define the tile layers
+      const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors',
-      }).addTo(map);
+      });
+
+      const osmHOTLayer = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+        attribution: 'Map tiles by the Humanitarian OpenStreetMap Team, under ODbL.',
+      });
+
+      const cartoDBLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://carto.com/attributions">CartoDB</a>',
+      });
+
+      // Add default layer (OSM)
+      osmLayer.addTo(map);
+
+      // Define a baseMaps object for layer control
+      const baseMaps = {
+        "OpenStreetMap": osmLayer,
+        "Humanitarian OSM (HOT)": osmHOTLayer,
+        "CartoDB Light": cartoDBLayer,
+      };
+
+      // Create an overlay for cities (example data)
+      const cities = [
+        { name: 'London', lat: 51.5074, lng: -0.1278 },
+        { name: 'New York', lat: 40.7128, lng: -74.0060 },
+        { name: 'Tokyo', lat: 35.6762, lng: 139.6503 },
+      ];
+
+      const citiesLayer = L.layerGroup(
+        cities.map(city =>
+          L.marker([city.lat, city.lng]).bindPopup(city.name)
+        )
+      );
+
+      // Define an overlayMaps object for layers control
+      const overlayMaps = {
+        "Cities": citiesLayer,
+      };
+
+      // Add the layers control to the map
+      L.control.layers(baseMaps, overlayMaps).addTo(map);
 
       // Check if the browser supports Geolocation API
       if (navigator.geolocation) {
@@ -39,6 +78,9 @@ function MapPage({ issueLocation }) {
       } else {
         console.error('Geolocation is not supported by this browser.');
       }
+
+      // Add the cities layer to the map (this could be dynamic as well)
+      citiesLayer.addTo(map);
     }
 
     // Add a marker for the issue location if it exists
@@ -47,7 +89,6 @@ function MapPage({ issueLocation }) {
       issueMarker.bindPopup('Issue reported here.').openPopup();
     }
   }, [issueLocation]); // Re-run when issueLocation changes
-
 
   return (
     <article className="map">
@@ -74,3 +115,4 @@ function MapPage({ issueLocation }) {
 }
 
 export default MapPage;
+

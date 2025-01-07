@@ -3,7 +3,7 @@ import { useState } from "react";
 import "./AddNewReport.scss";
 import errorIcon from "../../assets/icons/error-24px.svg";
 import { Link, useNavigate } from "react-router-dom";
-import backArrow from "../../assets/icons/arrow_back-24px.svg";
+import backArrow from "../../assets/icons/world-map-svgrepo-com.svg";
 
 function AddNewReport() {
   const navigate = useNavigate();
@@ -70,22 +70,29 @@ function AddNewReport() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
     if (!validateForm()) return;
-
-    async function createReport() {
+  
+    async function createReport(latitude, longitude) {
       try {
         const formData = new FormData();
+  
         // Append form fields
         Object.keys(form).forEach((key) => {
           if (key !== 'media') formData.append(key, form[key]);
         });
-
+  
         // Append media files
         form.media.forEach((file) => {
           formData.append('media', file);
         });
-
+  
+        // Append geolocation data
+        if (latitude && longitude) {
+          formData.append('latitude', latitude);
+          formData.append('longitude', longitude);
+        }
+  
         const response = await axios.post(`${url}/api/reports`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
@@ -105,8 +112,25 @@ function AddNewReport() {
         console.error("Error creating report:", error);
       }
     }
-
-    createReport();
+  
+    // Request geolocation data
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          createReport(latitude, longitude);
+        },
+        (error) => {
+          console.error("Geolocation error:", error);
+          // Proceed without geolocation if not available or denied
+          createReport();
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+      // Proceed without geolocation
+      createReport();
+    }
   };
 
   const handleCancel = () => {
@@ -126,7 +150,7 @@ function AddNewReport() {
     <div className="add-report">
       <div className="add-report__header">
         <h1 className="add-report__header-name">
-          <Link className="add-report__header-back" to="/">
+          <Link className="add-report__header-back" to="/map">
             <img src={backArrow} alt="Back" />
           </Link>
           Report Environmental Issue
@@ -136,11 +160,12 @@ function AddNewReport() {
         <form className="add-report__form" onSubmit={handleSubmit}>
           <div className="add-report__fields-wrapper">
             <div className="add-report__details-wrapper">
-              <h2 className="add-report__form-header">Report Details</h2>
+              <h2 className="add-report__form-header">Environmental Issue Details</h2>
 
               {/* Address Section */}
-              <div>
-                <button type="button" onClick={() => toggleSection("address")}>
+              <div className="add-report__container">
+                <button 
+                type="button" className="add-report__button" onClick={() => toggleSection("address")}>
                   Address
                 </button>
                 {openSections.address && (
@@ -164,8 +189,8 @@ function AddNewReport() {
               </div>
 
               {/* Description Section */}
-              <div>
-                <button type="button" onClick={() => toggleSection("description")}>
+              <div className="add-report__container">
+                <button type="button" className="add-report__button" onClick={() => toggleSection("description")}>
                   Description of the Problem
                 </button>
                 {openSections.description && (
@@ -188,8 +213,8 @@ function AddNewReport() {
               </div>
 
               {/* Category Section */}
-              <div>
-                <button type="button" onClick={() => toggleSection("category")}>
+              <div className="add-report__container">
+                <button type="button" className="add-report__button" onClick={() => toggleSection("category")}>
                   Category
                 </button>
                 {openSections.category && (
@@ -222,8 +247,8 @@ function AddNewReport() {
               <h2 className="add-report__form-header">Contact Details (Optional)</h2>
 
               {/* Contact Name Section */}
-              <div>
-                <button type="button" onClick={() => toggleSection("contact_name")}>
+              <div className="add-report__container">
+                <button type="button" className="add-report__button" onClick={() => toggleSection("contact_name")}>
                   Contact Name
                 </button>
                 {openSections.contact_name && (
@@ -241,8 +266,8 @@ function AddNewReport() {
               </div>
 
               {/* Contact Phone Section */}
-              <div>
-                <button type="button" onClick={() => toggleSection("contact_phone")}>
+              <div className="add-report__container">
+                <button type="button" className="add-report__button" onClick={() => toggleSection("contact_phone")}>
                   Phone Number
                 </button>
                 {openSections.contact_phone && (
@@ -266,8 +291,8 @@ function AddNewReport() {
               </div>
 
               {/* Contact Email Section */}
-              <div>
-                <button type="button" onClick={() => toggleSection("contact_email")}>
+              <div className="add-report__container">
+                <button type="button" className="add-report__button" onClick={() => toggleSection("contact_email")}>
                   Email
                 </button>
                 {openSections.contact_email && (

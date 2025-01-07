@@ -93,6 +93,7 @@ Endpoints
    npm install
    npm install react-router-dom
    npm install axios
+   npm install -g sass
    ```
 4. Start the development server:
    ```bash

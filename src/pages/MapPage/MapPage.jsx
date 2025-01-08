@@ -7,7 +7,7 @@ import Footer from '../../components/Footer/Footer';
 
 let map = null; // Declare a variable to store the map instance
 
-function MapPage({ issueLocation }) {
+function MapPage({ issueLocation, setLatitude, setLongitude }) {
   useEffect(() => {
     if (!map) {
       // Initialize the map centered at a default location
@@ -66,6 +66,10 @@ function MapPage({ issueLocation }) {
 
             // Set the map view to the user's location
             map.setView([latitude, longitude], 13);
+            setLatitude(latitude);
+            setLongitude(longitude);
+
+            console.log(latitude, longitude);
 
             // Add a marker at the user's location
             const marker = L.marker([latitude, longitude]).addTo(map);
@@ -79,16 +83,23 @@ function MapPage({ issueLocation }) {
         console.error('Geolocation is not supported by this browser.');
       }
 
+      
+
       // Add the cities layer to the map (this could be dynamic as well)
       citiesLayer.addTo(map);
     }
+
+    
 
     // Add a marker for the issue location if it exists
     if (issueLocation && issueLocation.lat && issueLocation.lng) {
       const issueMarker = L.marker([issueLocation.lat, issueLocation.lng]).addTo(map);
       issueMarker.bindPopup('Issue reported here.').openPopup();
     }
+
   }, [issueLocation]); // Re-run when issueLocation changes
+
+
 
   return (
     <article className="map">

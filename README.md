@@ -48,9 +48,54 @@ API
 Endpoints
 •	`GET /incidents`: Fetch all incidents for the map
 •	`POST /incidents`: Submit a new incident
+
+   http://localhost:8080/api/complaints/anonymous
+
+   {
+      "address": "123 Maple Street, Springfield",
+      "contact_name": "EAR",
+      "contact_phone": "123-456-7890",
+      "contact_email": "johndoe@example.com",
+      "description": "Flooding in the area due to heavy rain.",
+      "category": "Flood",
+      "media": [
+         "images/flood1.jpg",
+         "images/flood2.jpg"
+      ],
+      "latitude": "39.7817000",
+      "longitude": "-89.6501000",
+      "created_at": "2025-01-08T20:24:35.000Z",
+      "updated_at": "2025-01-08T20:24:35.000Z"
+   }
+
+   Response
+
+   {
+    "message": "Complaint submitted successfully.",
+    "reportId": 6
+   }
+
+
+
 •	`GET /incidents/:id`: Retrieve incident details
+
+   http://localhost:8080/api/complaints/anonymous
+   
+   {
+      "address": "123 Maple Street, Springfield",
+      "contact_name": "John Doe",
+      "contact_phone": "123-456-7890",
+      "contact_email": "johndoe@example.com",
+      "description": "Flooding in the area due to heavy rain.",
+      "category": "Flood",
+      "media": ["images/flood1.jpg", "images/flood2.jpg"],
+      "latitude": "39.7817000",
+      "longitude": "-89.6501000"
+   }
+
 •	`PUT /incidents/:id`: Update an incident
 •	`DELETE /incidents/:id`: Delete an incident
+
 
 ### Sitemap
 

@@ -1,11 +1,13 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./AddNewReport.scss";
 import errorIcon from "../../assets/icons/error-24px.svg";
 import { Link, useNavigate } from "react-router-dom";
 import backArrow from "../../assets/icons/world-map-svgrepo-com.svg";
+import L from 'leaflet';
+import MapPage from "../../pages/MapPage/MapPage";
 
-function AddNewReport() {
+function AddNewReport({latitude, longitude}) {
   const navigate = useNavigate();
   const [form, setForm] = useState({
     address: "",
@@ -15,6 +17,8 @@ function AddNewReport() {
     description: "",
     category: "",
     media: [], // To store the files selected
+    latitude: latitude || "", // Initialize with props or empty string
+  longitude: longitude || "", // Initialize with props or empty string
   });
   const [errors, setErrors] = useState({});
   const [openSections, setOpenSections] = useState({
@@ -27,7 +31,7 @@ function AddNewReport() {
     media: false,
   }); // Track which sections are open
 
-  const url = import.meta.env.VITE_API_URL;
+  const url = "http://localhost:8080";
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -45,6 +49,7 @@ function AddNewReport() {
     }));
   };
 
+  // Function to toggle section visibility
   const toggleSection = (section) => {
     setOpenSections((prevSections) => ({
       ...prevSections,
@@ -68,70 +73,49 @@ function AddNewReport() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+
+  
+
+
+  const handleSubmit = async (e, latitude, longitude) => {
     e.preventDefault();
   
     if (!validateForm()) return;
-  
-    async function createReport(latitude, longitude) {
-      try {
-        const formData = new FormData();
-  
-        // Append form fields
-        Object.keys(form).forEach((key) => {
-          if (key !== 'media') formData.append(key, form[key]);
-        });
-  
-        // Append media files
-        form.media.forEach((file) => {
-          formData.append('media', file);
-        });
-  
-        // Append geolocation data
-        if (latitude && longitude) {
-          formData.append('latitude', latitude);
-          formData.append('longitude', longitude);
-        }
-  
-        const response = await axios.post(`${url}/api/reports`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-        setForm({
-          address: "",
-          contact_name: "",
-          contact_phone: "",
-          contact_email: "",
-          description: "",
-          category: "",
-          media: [],
-        });
-        navigate("/", { replace: true });
-      } catch (error) {
-        console.error("Error creating report:", error);
-      }
-    }
-  
-    // Request geolocation data
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          createReport(latitude, longitude);
-        },
-        (error) => {
-          console.error("Geolocation error:", error);
-          // Proceed without geolocation if not available or denied
-          createReport();
-        }
-      );
-    } else {
-      console.error("Geolocation is not supported by this browser.");
-      // Proceed without geolocation
-      createReport();
-    }
+
+
+
+    
+    setForm((prevForm) => ({
+      ...prevForm,
+      // media: files,
+      latitude: latitude,
+      longitude: longitude,
+    }));
+
+    console.log("Looking at the form:", form);
+    console.log("Props Latitude:", latitude, "Props Longitude:", longitude);
+
+
+
+
+      // try {
+      //   const response = await axios.post(`${url}/api/complaints/anonymous`, form);
+      //   setForm({
+      //     address: "",
+      //     contact_name: "",
+      //     contact_phone: "",
+      //     contact_email: "",
+      //     description: "",
+      //     category: "",
+      //     media: [],
+      //   });
+      //   navigate("/", { replace: true });
+      // } catch (error) {
+      //   console.error("Error creating report:", error);
+      // }
+
   };
+
 
   const handleCancel = () => {
     setForm({
@@ -145,6 +129,9 @@ function AddNewReport() {
     });
     setErrors({});
   };
+
+
+  console.log(latitude, longitude);
 
   return (
     <div className="add-report">
@@ -340,12 +327,14 @@ function AddNewReport() {
             )}
           </div>
 
+          <MapPage/>
+
           <div className="add-report__actions-wrapper">
             <div className="add-report__actions">
               <button onClick={handleCancel} className="btn btn--cancel" type="button">
                 Cancel
               </button>
-              <button className="btn btn--submit" type="submit">
+              <button className="btn btn--submit" type="submit" onSubmit={handleSubmit}>
                 Submit Report
               </button>
             </div>

@@ -1,13 +1,35 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import './MapPage.scss';
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
+import axios from 'axios';
+
 
 let map = null; // Declare a variable to store the map instance
 
 function MapPage({ issueLocation, setLatitude, setLongitude }) {
+
+  const [issues, setIssues] = useState(null);  //state variable
+
+  const url = "http://localhost:8080";
+
+  // function to fetch issues
+  const fetchIssues = async () => {  
+    try {
+      const response = await axios.get(`${url}/api/complaints/anonymous`);
+      setIssues(response.data);
+    } catch (error) {
+      console.error("Error fetching issue:", error);
+    } 
+  };
+
+  // useEffect to call the function on mount
+  useEffect (() =>{
+    fetchIssues();
+  }, []);
+
   useEffect(() => {
     if (!map) {
       // Initialize the map centered at a default location
@@ -15,89 +37,111 @@ function MapPage({ issueLocation, setLatitude, setLongitude }) {
 
       // Define the tile layers
       const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors',
+        attribution: 'Issues',
       });
 
-      const osmHOTLayer = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
-        attribution: 'Map tiles by the Humanitarian OpenStreetMap Team, under ODbL.',
-      });
+      // const osmHOTLayer = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+      //   attribution: 'Map tiles by the Humanitarian OpenStreetMap Team, under ODbL.',
+      // });
 
-      const cartoDBLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://carto.com/attributions">CartoDB</a>',
-      });
+      // const cartoDBLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+      //   attribution: '&copy; <a href="https://carto.com/attributions">CartoDB</a>',
+      // });
 
       // Add default layer (OSM)
       osmLayer.addTo(map);
 
       // Define a baseMaps object for layer control
-      const baseMaps = {
-        "OpenStreetMap": osmLayer,
-        "Humanitarian OSM (HOT)": osmHOTLayer,
-        "CartoDB Light": cartoDBLayer,
-      };
+      // const baseMaps = {
+      //   "OpenStreetMap": osmLayer,
+      //   "Humanitarian OSM (HOT)": osmHOTLayer,
+      //   "CartoDB Light": cartoDBLayer,
+      // };
 
       // Create an overlay for cities (example data)
-      const cities = [
-        { name: 'London', lat: 51.5074, lng: -0.1278 },
-        { name: 'New York', lat: 40.7128, lng: -74.0060 },
-        { name: 'Tokyo', lat: 35.6762, lng: 139.6503 },
-      ];
+      // const cities = [
+      //   { name: 'London', lat: 51.5074, lng: -0.1278 },
+      //   { name: 'New York', lat: 40.7128, lng: -74.0060 },
+      //   { name: 'Tokyo', lat: 35.6762, lng: 139.6503 },
+      // ];
 
-      const citiesLayer = L.layerGroup(
-        cities.map(city =>
-          L.marker([city.lat, city.lng]).bindPopup(city.name)
-        )
-      );
+      // const citiesLayer = L.layerGroup(
+      //   cities.map(city =>
+      //     L.marker([city.lat, city.lng]).bindPopup(city.name)
+      //   )
+      // );
+
+
 
       // Define an overlayMaps object for layers control
-      const overlayMaps = {
-        "Cities": citiesLayer,
-      };
+      // const overlayMaps = {
+      //   "Cities": citiesLayer,
+      // };
 
       // Add the layers control to the map
-      L.control.layers(baseMaps, overlayMaps).addTo(map);
+      // L.control.layers(baseMaps, overlayMaps).addTo(map);
 
-      // Check if the browser supports Geolocation API
-      if (navigator.geolocation) {
-        // Get the user's current position
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
 
-            // Set the map view to the user's location
-            map.setView([latitude, longitude], 13);
-            setLatitude(latitude);
-            setLongitude(longitude);
 
-            console.log(latitude, longitude);
+      // // Check if the browser supports Geolocation API
+      // if (navigator.geolocation) {
+      //   // Get the user's current position
+      //   navigator.geolocation.getCurrentPosition(
+      //     (position) => {
+      //       const { latitude, longitude } = position.coords;
 
-            // Add a marker at the user's location
-            const marker = L.marker([latitude, longitude]).addTo(map);
-            marker.bindPopup('You are here!').openPopup();
-          },
-          (error) => {
-            console.error('Error getting location:', error);
-          }
-        );
-      } else {
-        console.error('Geolocation is not supported by this browser.');
-      }
+      //       // Set the map view to the user's location
+      //       map.setView([latitude, longitude], 13);
+      //       setLatitude(latitude);
+      //       setLongitude(longitude);
+
+      //       console.log(latitude, longitude);
+
+      //       // Add a marker at the user's location
+      //       const marker = L.marker([latitude, longitude]).addTo(map);
+      //       marker.bindPopup('You are here!').openPopup();
+      //     },
+      //     (error) => {
+      //       console.error('Error getting location:', error);
+      //     }
+      //   );
+      // } else {
+      //   console.error('Geolocation is not supported by this browser.');
+      // }
 
       
 
       // Add the cities layer to the map (this could be dynamic as well)
-      citiesLayer.addTo(map);
+      // citiesLayer.addTo(map);
     }
 
     
 
-    // Add a marker for the issue location if it exists
-    if (issueLocation && issueLocation.lat && issueLocation.lng) {
-      const issueMarker = L.marker([issueLocation.lat, issueLocation.lng]).addTo(map);
-      issueMarker.bindPopup('Issue reported here.').openPopup();
+    // // Add a marker for the issue location if it exists
+    // if (issueLocation && issueLocation.lat && issueLocation.lng) {
+    //   const issueMarker = L.marker([issueLocation.lat, issueLocation.lng]).addTo(map);
+    //   issueMarker.bindPopup('Issue reported here.').openPopup();
+    // }
+
+    // Array to store the markers to zoom-in on them later
+    const issueMarkers = [];
+
+    // Create markers and add them to map
+    if (issues) {
+      for (let i = 0; i < issues.length; i++) {
+        const issueMarker = L.marker([issues[i].latitude, issues[i].longitude]);
+        issueMarker.addTo(map);
+        issueMarkers.push(issueMarker);
+        issueMarker.bindPopup('Issue reported here.');
+      }
     }
 
-  }, [issueLocation]); // Re-run when issueLocation changes
+    // Zoom-in to the issue markers
+    if (issueMarkers.length > 0){
+      const featureGroup = new L.featureGroup(issueMarkers);
+      map.fitBounds(featureGroup.getBounds()); 
+    }
+  }, [issues]); // Re-run when issueLocation changes
 
 
 

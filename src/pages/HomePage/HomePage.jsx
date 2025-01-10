@@ -9,7 +9,7 @@ function HomePage () {
 
   // Navigate to the Maps page
   const handleNavigateToMaps = () => {
-    window.location.href = '/maps'; // Update the path as per your routing setup
+    window.location.href = '/map'; // Update the path as per your routing setup
   };
 
   return (
@@ -22,9 +22,9 @@ function HomePage () {
 
       {/* Main Layout */}
       <div className="home__layout">
-        {/* Colombia Photo Gallery */}
+        {/* Environmental Issues Photo Gallery */}
         <section className="home__gallery">
-          <h2>Discover Colombia</h2>
+          <h2>Environmental Incident Reporting App</h2>
           <Gallery />
         </section>
 

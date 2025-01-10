@@ -7,8 +7,11 @@ import backArrow from "../../assets/icons/world-map-svgrepo-com.svg";
 import L from 'leaflet';
 import MapPage from "../../pages/MapPage/MapPage";
 
+let map = null; // Declare a variable to store the map instance
+
 function AddNewReport({latitude, longitude}) {
   const navigate = useNavigate();
+  const [markerCoord, setMarkerCoord] = useState(); 
   const [form, setForm] = useState({
     address: "",
     contact_name: "",
@@ -17,8 +20,7 @@ function AddNewReport({latitude, longitude}) {
     description: "",
     category: "",
     media: [], // To store the files selected
-    latitude: latitude || "", // Initialize with props or empty string
-  longitude: longitude || "", // Initialize with props or empty string
+    
   });
   const [errors, setErrors] = useState({});
   const [openSections, setOpenSections] = useState({
@@ -98,21 +100,25 @@ function AddNewReport({latitude, longitude}) {
 
 
 
-      // try {
-      //   const response = await axios.post(`${url}/api/complaints/anonymous`, form);
-      //   setForm({
-      //     address: "",
-      //     contact_name: "",
-      //     contact_phone: "",
-      //     contact_email: "",
-      //     description: "",
-      //     category: "",
-      //     media: [],
-      //   });
-      //   navigate("/", { replace: true });
-      // } catch (error) {
-      //   console.error("Error creating report:", error);
-      // }
+      try {
+        const response = await axios.post(`${url}/api/complaints/anonymous`, {
+          ...form, 
+          latitude: markerCoord.lat,
+          longitude: markerCoord.lng,
+        });
+        setForm({
+          address: "",
+          contact_name: "",
+          contact_phone: "",
+          contact_email: "",
+          description: "",
+          category: "",
+          media: [],
+        });
+        navigate("/", { replace: true });
+      } catch (error) {
+        console.error("Error creating report:", error);
+      }
 
   };
 
@@ -130,8 +136,48 @@ function AddNewReport({latitude, longitude}) {
     setErrors({});
   };
 
+    useEffect(() => {
+      if (!map) {
+        // Initialize the map centered at a default location
+        map = L.map('map', {center:[0,0]});
+  
+        // Define the tile layers
+        const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: 'Issues',
+        });
+  
+        // Add default layer (OSM)
+        osmLayer.addTo(map);
+        
+        // Check if the browser supports Geolocation API
+        if (navigator.geolocation) {
+          // Get the user's current position
+          navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            // Set the map view to the user's location
+            map.setView([latitude, longitude], 13);
+          },
+          (error) => {
+            console.error('Error getting location:', error);
+          }
+        );
+        } else {
+          console.error('Geolocation is not supported by this browser.');
+        }
 
-  console.log(latitude, longitude);
+        let marker;
+
+        map.on("click", function(event){
+          if (marker){
+            map.removeLayer(marker);
+          }
+          marker = new L.marker(event.latlng).addTo(map);
+          setMarkerCoord(event.latlng);
+        });
+
+      }
+    }, []);
 
   return (
     <div className="add-report">
@@ -327,7 +373,7 @@ function AddNewReport({latitude, longitude}) {
             )}
           </div>
 
-          <MapPage/>
+          <div id="map" className="add-report__map"></div>
 
           <div className="add-report__actions-wrapper">
             <div className="add-report__actions">

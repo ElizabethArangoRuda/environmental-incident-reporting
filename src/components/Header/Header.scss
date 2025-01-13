@@ -1,4 +1,4 @@
-.header {
+/*.header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -48,5 +48,218 @@
                 }
             }
         }
+    }
+}*/
+
+/*.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #333;
+    border-bottom: 1px solid #ddd;
+    flex-wrap: wrap; /* Permite que los elementos se ajusten en pantallas pequeñas
+  
+    /* Logo y enlaces
+    .header__links {
+      display: flex;
+      justify-content: space-between; /* Distribuye los elementos
+      align-items: center;
+      width: 100%; /* Hace que los enlaces ocupen el 100% de ancho cuando sea necesario
+  
+      &--left {
+        display: flex;
+        align-items: center;
+        width: auto;
+  
+        .header__logo {
+          font-size: 1.5rem;
+          font-weight: bold;
+          margin-right: 20px;
+          color: #fff;
+        }
+  
+        nav {
+          a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #fff;
+            font-size: 1rem;
+  
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+  
+      &--right {
+        display: flex;
+        align-items: center;
+        margin-left: auto; /* Empuja los elementos a la derecha 
+  
+        .header__button {
+          background-color: #4CAF50;
+          color: white;
+          border: none;
+          padding: 10px 20px;
+          margin-left: 10px;
+          cursor: pointer;
+          font-size: 1rem;
+          border-radius: 5px;
+  
+          &:hover {
+            background-color: #45a049;
+          }
+        }
+      }
+    }
+  }*/
+
+/* General styles for the header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #333;
+    border-bottom: 1px solid #ddd;
+    flex-wrap: wrap;
+
+    /* Logo and links */
+    .header__links {
+        display: flex;
+        align-items: center;
+
+        &--left {
+            display: flex;
+            align-items: center;
+
+            .header__logo {
+                font-size: 1.5rem;
+                font-weight: bold;
+                margin-right: 20px;
+                color: #fff;
+            }
+
+            nav {
+                display: flex;
+                gap: 15px;
+
+                a {
+                    text-decoration: none;
+                    color: #fff;
+                    font-size: 1rem;
+
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+            }
+        }
+
+        &--right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            .header__button {
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                cursor: pointer;
+                font-size: 1rem;
+                border-radius: 5px;
+
+                &:hover {
+                    background-color: #45a049;
+                }
+            }
+        }
+    }
+}
+
+/* Responsive Media Queries */
+/* Mobile Screens (320px - 480px) */
+@media (max-width: 480px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
+    }
+
+    .header__links {
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .header__button {
+        width: 100%;
+        padding: 12px;
+        margin-top: 10px;
+        text-align: center;
+    }
+}
+
+/* For tablets (481px - 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    .header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+    }
+
+    .header__links {
+        width: auto;
+        margin-top: 0;
+    }
+
+    .header__button {
+        padding: 10px 20px;
+    }
+}
+
+/* For small laptop displays (769px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .header {
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 15px;
+        /* Ajustar el padding */
+    }
+
+    .header__button {
+        padding: 10px 25px;
+    }
+}
+
+/* For desktop computer displays (1025px - 1200px) */
+@media (min-width: 1025px) and (max-width: 1200px) {
+    .header {
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 20px;
+    }
+
+    .header__button {
+        padding: 10px 25px;
+    }
+}
+
+/* For extra large screens (1201px and upwards) */
+@media (min-width: 1201px) {
+    .header {
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 25px;
+    }
+
+    .header__button {
+        padding: 10px 30px;
     }
 }

@@ -1,29 +1,85 @@
-.map {
-    display: flex;
-    flex-direction: column;
-    height: 100vh; // Full height of the viewport
+.map-page { //map
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f4f4f4;
+  padding: 20px;
+}
+
+.map-page__container { // map__layout
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+}
+
+.map-page__title-section { // section__h2
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+  h2 {
     margin: 0;
-  
-    .map__layout {
-      flex: 1; // Takes up remaining space between header and footer
-      display: flex;
-      flex-direction: column;
-    }
-  
-    .map__search {
-      padding: 1rem;
-      background-color: #f4f4f4; // Light background for the search section
-      text-align: center;
-    }
-  
-    .map__map {
-      flex: 1; // Ensures the map takes up all available space
-      display: flex;
-  
-      .map__container {
-        flex: 1;
-        height: 100%; // Full height of the parent
-        width: 100%; // Full width of the parent
-      }
-    }
+    font-size: 28px;
+    text-align: center;
   }
+}
+
+.map-page__map-container { // map__map
+  background-color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+
+/* Media Queries for responsiveness */
+@media (max-width: 768px) {
+  .map__layout {
+    gap: 15px;
+    /* Reduce gap between sections on smaller screens */
+    padding: 15px;
+    /* Reduce padding */
+  }
+
+  .section__h2 {
+    padding: 15px;
+  }
+
+  h2 {
+    font-size: 24px;
+    /* Reduce font size for smaller screens */
+  }
+
+  .map__map {
+    padding: 20px;
+    /* Adjust padding for map section */
+  }
+}
+
+@media (max-width: 480px) {
+  .map__layout {
+    gap: 10px;
+    /* Reduce gap even more */
+    padding: 10px;
+    /* Further reduce padding */
+  }
+
+  .section__h2 {
+    padding: 10px;
+  }
+
+  h2 {
+    font-size: 20px;
+    /* Smaller font size */
+  }
+
+  .map__map {
+    padding: 10px;
+    /* Less padding for smaller screens */
+  }
+}

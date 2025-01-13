@@ -1,62 +1,95 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import React, { useState } from 'react';
 import "./AddNewReport.scss";
 import errorIcon from "../../assets/icons/error-24px.svg";
-import { Link, useNavigate } from "react-router-dom";
-import backArrow from "../../assets/icons/world-map-svgrepo-com.svg";
-import L from 'leaflet';
-import MapPage from "../../pages/MapPage/MapPage";
+import ComplaintService from '../../services/ComplaintService'; // Import the service
+import Map from '../Map/Map'; // Import the new Map component
 
-let map = null; // Declare a variable to store the map instance
+function AddNewReport(/*{ setLatitude, setLongitude }*/) {
 
-function AddNewReport({latitude, longitude}) {
-  const navigate = useNavigate();
-  const [markerCoord, setMarkerCoord] = useState(); 
-  const [form, setForm] = useState({
-    address: "",
-    contact_name: "",
-    contact_phone: "",
-    contact_email: "",
-    description: "",
-    category: "",
-    media: [], // To store the files selected
-    
-  });
-  const [errors, setErrors] = useState({});
+  // const [coordinates, setCoordinates] = useState({ latitude: null, longitude: null });
+
+  const handleMarkerChange = (lat, lng) => {
+    setForm((prev) => ({
+      ...prev,
+      latitude: lat,
+      longitude: lng,
+      //coordinates: { latitude: lat, longitude: lng },
+    }));
+    console.log("Selected coordinates:", { lat, lng });
+  };
+
+  // Status to manage which accordion is open
   const [openSections, setOpenSections] = useState({
-    address: false,
-    description: false,
-    category: false,
-    contact_name: false,
-    contact_phone: false,
-    contact_email: false,
-    media: false,
-  }); // Track which sections are open
+    report_environmental_issue: false,
+    contact_information_optional: false,
+    media_files: false,
+  });
 
-  const url = "http://localhost:8080";
+  // Function for toggling the visibility of an accordion
+  const toggleSection = (section) => {
+    setOpenSections((prevState) => ({
+      ...prevState,
+      [section]: !prevState[section],
+    }));
+  };
 
+  // Status to handle form data
+  const [form, setForm] = useState({
+    address: '',
+    description: '',
+    category: '',
+    contact_name: '',
+    contact_phone: '',
+    contact_email: '',
+    media_files: [],
+    latitude: 0,
+    longitude: 0,
+    //coordinates: { latitude: null, longitude: null },
+  });
+
+  const [errors, setErrors] = useState({});
+
+  // Function to handle changes in form fields
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((prevForm) => ({
-      ...prevForm,
-      [name]: value,
-    }));
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Function to handle file change
   const handleFileChange = (e) => {
-    const files = Array.from(e.target.files); // Convert file list to array
-    setForm((prevForm) => ({
-      ...prevForm,
-      media: files,
+    const { files } = e.target;
+    const maxSize = 5 * 1024 * 1024; // 5MB
+
+    const validFiles = Array.from(files).filter((file) => file.size <= maxSize);
+    console.log("Valid Files", validFiles);
+    setForm((prev) => ({
+      ...prev,
+      media_files: validFiles,
     }));
+    if (files.length !== validFiles.length) {
+      alert("Some files are too large and were not added.");
+    }
   };
 
-  // Function to toggle section visibility
-  const toggleSection = (section) => {
-    setOpenSections((prevSections) => ({
-      ...prevSections,
-      [section]: !prevSections[section],
-    }));
+  // Función para manejar el envío del formulario
+  const handleSubmit = async (e) => {
+
+    e.preventDefault();
+
+    if (!validateForm()) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+
+    try {
+      const response = await ComplaintService.createComplaint(form);
+      console.log('Complaint submitted successfully:', response);
+      alert('Complaint submitted successfully!');
+    } catch (error) {
+      console.error('Error submitting complaint:', error);
+      alert('Failed to submit complaint.');
+    }
+    console.log("Form Submitted:", form);
   };
 
   const validateForm = () => {
@@ -64,6 +97,12 @@ function AddNewReport({latitude, longitude}) {
     if (!form.address) newErrors.address = "Address is required.";
     if (!form.description) newErrors.description = "Description is required.";
     if (!form.category) newErrors.category = "Category is required.";
+    if (!form.latitude || !form.longitude) {
+      newErrors.coordinates = "Please select a location on the map.";
+    }
+    /*if (!form.coordinates.latitude || !form.coordinates.longitude) {
+      newErrors.coordinates = "Please select a location on the map.";
+    }*/
     if (form.contact_phone && !/^\+\d{1,3}\s?\(\d{1,3}\)\s?\d{3}-\d{4}$/.test(form.contact_phone)) {
       newErrors.contact_phone = "Invalid phone number format. Use +1 (212) 555-6789.";
     }
@@ -76,181 +115,49 @@ function AddNewReport({latitude, longitude}) {
   };
 
 
-  
-
-
-  const handleSubmit = async (e, latitude, longitude) => {
-    e.preventDefault();
-  
-    if (!validateForm()) return;
-
-
-
-    
-    setForm((prevForm) => ({
-      ...prevForm,
-      // media: files,
-      latitude: latitude,
-      longitude: longitude,
-    }));
-
-    console.log("Looking at the form:", form);
-    console.log("Props Latitude:", latitude, "Props Longitude:", longitude);
-
-
-
-
-      try {
-        const response = await axios.post(`${url}/api/complaints/anonymous`, {
-          ...form, 
-          latitude: markerCoord.lat,
-          longitude: markerCoord.lng,
-        });
-        setForm({
-          address: "",
-          contact_name: "",
-          contact_phone: "",
-          contact_email: "",
-          description: "",
-          category: "",
-          media: [],
-        });
-        navigate("/", { replace: true });
-      } catch (error) {
-        console.error("Error creating report:", error);
-      }
-
-  };
-
-
-  const handleCancel = () => {
-    setForm({
-      address: "",
-      contact_name: "",
-      contact_phone: "",
-      contact_email: "",
-      description: "",
-      category: "",
-      media: [],
-    });
-    setErrors({});
-  };
-
-    useEffect(() => {
-      if (!map) {
-        // Initialize the map centered at a default location
-        map = L.map('map', {center:[0,0]});
-  
-        // Define the tile layers
-        const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: 'Issues',
-        });
-  
-        // Add default layer (OSM)
-        osmLayer.addTo(map);
-        
-        // Check if the browser supports Geolocation API
-        if (navigator.geolocation) {
-          // Get the user's current position
-          navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-            // Set the map view to the user's location
-            map.setView([latitude, longitude], 13);
-          },
-          (error) => {
-            console.error('Error getting location:', error);
-          }
-        );
-        } else {
-          console.error('Geolocation is not supported by this browser.');
-        }
-
-        let marker;
-
-        map.on("click", function(event){
-          if (marker){
-            map.removeLayer(marker);
-          }
-          marker = new L.marker(event.latlng).addTo(map);
-          setMarkerCoord(event.latlng);
-        });
-
-      }
-    }, []);
-
   return (
     <div className="add-report">
-      <div className="add-report__header">
-        <h1 className="add-report__header-name">
-          <Link className="add-report__header-back" to="/map">
-            <img src={backArrow} alt="Back" />
-          </Link>
-          Report Environmental Issue
-        </h1>
-      </div>
       <div className="add-report__wrapper">
-        <form className="add-report__form" onSubmit={handleSubmit}>
-          <div className="add-report__fields-wrapper">
-            <div className="add-report__details-wrapper">
-              <h2 className="add-report__form-header">Environmental Issue Details</h2>
-
-              {/* Address Section */}
-              <div className="add-report__container">
-                <button 
-                type="button" className="add-report__button" onClick={() => toggleSection("address")}>
-                  Address
-                </button>
-                {openSections.address && (
-                  <div>
-                    <input
-                      className={`add-report__input ${errors.address ? "add-report__input--error" : ""}`}
-                      name="address"
-                      type="text"
-                      placeholder="Address"
-                      value={form.address}
-                      onChange={handleChange}
-                    />
-                    {errors.address && (
-                      <p className="error-message">
-                        <img className="error-icon" src={errorIcon} alt="Error" />
-                        {errors.address}
-                      </p>
-                    )}
-                  </div>
+        <form className="add-report__form" onSubmit={handleSubmit} encType="multipart/form-data">
+          {/* Acordeón de la Dirección */}
+          <div className="add-report__container">
+            <button
+              type="button"
+              onClick={() => toggleSection("report_environmental_issue")}
+              className="add-report__button"
+            >
+              Report Environmental Issue
+            </button>
+            {openSections.report_environmental_issue && (
+              <div>
+                <input
+                  className={`add-report__input ${errors.address ? "add-report__input--error" : ""}`}
+                  name="address"
+                  type="text"
+                  placeholder="Address"
+                  value={form.address}
+                  onChange={handleChange}
+                />
+                {errors.address && (
+                  <p className="error-message">
+                    <img className="error-icon" src={errorIcon} alt="Error" />
+                    {errors.address}
+                  </p>
                 )}
-              </div>
-
-              {/* Description Section */}
-              <div className="add-report__container">
-                <button type="button" className="add-report__button" onClick={() => toggleSection("description")}>
-                  Description of the Problem
-                </button>
-                {openSections.description && (
-                  <div>
-                    <textarea
-                      className={`add-report__textarea ${errors.description ? "add-report__input--error" : ""}`}
-                      name="description"
-                      placeholder="Describe the problem"
-                      value={form.description}
-                      onChange={handleChange}
-                    />
-                    {errors.description && (
-                      <p className="error-message">
-                        <img className="error-icon" src={errorIcon} alt="Error" />
-                        {errors.description}
-                      </p>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {/* Category Section */}
-              <div className="add-report__container">
-                <button type="button" className="add-report__button" onClick={() => toggleSection("category")}>
-                  Category
-                </button>
-                {openSections.category && (
+                <div>
+                  <textarea
+                    className={`add-report__textarea ${errors.description ? "add-report__input--error" : ""}`}
+                    name="description"
+                    placeholder="Describe the problem"
+                    value={form.description}
+                    onChange={handleChange}
+                  />
+                  {errors.description && (
+                    <p className="error-message">
+                      <img className="error-icon" src={errorIcon} alt="Error" />
+                      {errors.description}
+                    </p>
+                  )}
                   <div>
                     <select
                       className={`add-report__select ${errors.category ? "add-report__input--error" : ""}`}
@@ -272,63 +179,45 @@ function AddNewReport({latitude, longitude}) {
                       </p>
                     )}
                   </div>
-                )}
+                </div>
               </div>
-            </div>
+            )}
+          </div>
 
-            <div className="add-report__contact-wrapper">
-              <h2 className="add-report__form-header">Contact Details (Optional)</h2>
-
-              {/* Contact Name Section */}
-              <div className="add-report__container">
-                <button type="button" className="add-report__button" onClick={() => toggleSection("contact_name")}>
-                  Contact Name
-                </button>
-                {openSections.contact_name && (
-                  <div>
-                    <input
-                      className={`add-report__input ${errors.contact_name ? "add-report__input--error" : ""}`}
-                      name="contact_name"
-                      type="text"
-                      placeholder="Contact Name"
-                      value={form.contact_name}
-                      onChange={handleChange}
-                    />
-                  </div>
-                )}
-              </div>
-
-              {/* Contact Phone Section */}
-              <div className="add-report__container">
-                <button type="button" className="add-report__button" onClick={() => toggleSection("contact_phone")}>
-                  Phone Number
-                </button>
-                {openSections.contact_phone && (
-                  <div>
-                    <input
-                      className={`add-report__input ${errors.contact_phone ? "add-report__input--error" : ""}`}
-                      name="contact_phone"
-                      type="text"
-                      placeholder="Phone Number"
-                      value={form.contact_phone}
-                      onChange={handleChange}
-                    />
-                    {errors.contact_phone && (
-                      <p className="error-message">
-                        <img className="error-icon" src={errorIcon} alt="Error" />
-                        {errors.contact_phone}
-                      </p>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {/* Contact Email Section */}
-              <div className="add-report__container">
-                <button type="button" className="add-report__button" onClick={() => toggleSection("contact_email")}>
-                  Email
-                </button>
-                {openSections.contact_email && (
+          {/* Acordeón de la Información de contacto */}
+          <div className="add-report__container">
+            <button
+              type="button"
+              onClick={() => toggleSection("contact_information_optional")}
+              className="add-report__button"
+            >
+              Contact Information (Optional)
+            </button>
+            {openSections.contact_information_optional && (
+              <div>
+                <input
+                  className={`add-report__input ${errors.contact_name ? "add-report__input--error" : ""}`}
+                  name="contact_name"
+                  type="text"
+                  placeholder="Contact Name"
+                  value={form.contact_name}
+                  onChange={handleChange}
+                />
+                <div>
+                  <input
+                    className={`add-report__input ${errors.contact_phone ? "add-report__input--error" : ""}`}
+                    name="contact_phone"
+                    type="text"
+                    placeholder="Phone Number"
+                    value={form.contact_phone}
+                    onChange={handleChange}
+                  />
+                  {errors.contact_phone && (
+                    <p className="error-message">
+                      <img className="error-icon" src={errorIcon} alt="Error" />
+                      {errors.contact_phone}
+                    </p>
+                  )}
                   <div>
                     <input
                       className={`add-report__input ${errors.contact_email ? "add-report__input--error" : ""}`}
@@ -345,42 +234,98 @@ function AddNewReport({latitude, longitude}) {
                       </p>
                     )}
                   </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Media Upload Section */}
-          <div className="add-report__media-section">
-            <button
-              type="button"
-              onClick={() => toggleSection("media")}
-              className="add-report__add-media-btn"
-            >
-              {openSections.media ? "Close Media Section" : "Add Media"}
-            </button>
-
-            {openSections.media && (
-              <div className="add-report__media-options">
-                <label className="add-report__label">Upload Media</label>
-                <input
-                  type="file"
-                  multiple
-                  accept="image/*,video/*"
-                  onChange={handleFileChange}
-                />
+                </div>
               </div>
             )}
           </div>
 
-          <div id="map" className="add-report__map"></div>
+          {/* Acordeón de Medios */}
+          <div className="add-report__media-section">
+            <button
+              type="button"
+              onClick={() => toggleSection("media_files")}
+              className="add-report__add-media-btn"
+            >
+              {openSections.media_files ? "Close Media Section" : "Add Media"}
+            </button>
+            {openSections.media_files && (
+              <div className="add-report__media-options">
+                <label className="add-report__label">Upload Media</label>
+                <input
+                  type="file"
+                  accept="image/*,video/*"
+                  name="media_files" // This name must be the same as the name expected by the api endpoint.
+                  onChange={handleFileChange}
+                />
+
+                {/* Vista previa de archivos */}
+                {form.media_files && form.media_files.length > 0 && (
+                  <div className="add-report__media-preview">
+                    <h3>Selected Files:</h3>
+                    <ul>
+                      {Array.from(form.media_files).map((file, index) => (
+                        <li key={index}>
+                          <span>{file.name}</span>
+                          {/* Vista previa de imágenes */}
+                          {file.type.startsWith("image/") && (
+                            <img
+                              src={URL.createObjectURL(file)}
+                              alt={file.name}
+                              className="add-report__media-preview-img"
+                            />
+                          )}
+                          {/* Vista previa de videos */}
+                          {file.type.startsWith("video/") && (
+                            <video
+                              src={URL.createObjectURL(file)}
+                              controls
+                              className="add-report__media-preview-video"
+                            />
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Validación de archivos */}
+                {errors.media && (
+                  <p className="error-message">
+                    <img className="error-icon" src={errorIcon} alt="Error" />
+                    {errors.media}
+                  </p>
+                )}
+
+              </div>
+            )}
+          </div>
+
+          {/* Validación de archivos */
+          /*<button type="submit" className="add-report__submit">
+            Submit Report
+          </button>
+          <div className="add-report__actions-wrapper">
+            <div className="add-report__actions">
+              <button className="btn btn--submit" type="submit" onSubmit={handleSubmit}>
+                Submit Report
+              </button>
+            </div>
+          </div>*/}
+
+          {/* Componente de Mapa */}
+          <Map
+            onMarkerChange={handleMarkerChange}
+          />
+          {errors.coordinates && (
+            <p className="error-message">
+              <img className="error-icon" src={errorIcon} alt="Error" />
+              {errors.coordinates}
+            </p>
+          )}
 
           <div className="add-report__actions-wrapper">
             <div className="add-report__actions">
-              <button onClick={handleCancel} className="btn btn--cancel" type="button">
-                Cancel
-              </button>
-              <button className="btn btn--submit" type="submit" onSubmit={handleSubmit}>
+              <button className="btn btn--submit" type="submit">
                 Submit Report
               </button>
             </div>
@@ -392,4 +337,3 @@ function AddNewReport({latitude, longitude}) {
 }
 
 export default AddNewReport;
-

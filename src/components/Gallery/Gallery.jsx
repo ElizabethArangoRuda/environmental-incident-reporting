@@ -20,9 +20,35 @@ function Gallery() {
         return () => clearInterval(interval); // Cleanup interval on component unmount
     }, [imageList.length]);
 
+    // Function to go to the next image
+    const nextImage = () => {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % imageList.length);
+    };
+
+    // Function to go to the previous image
+    const prevImage = () => {
+        setCurrentIndex(
+            (prevIndex) => (prevIndex - 1 + imageList.length) % imageList.length
+        );
+    };
+
     return (
         <div className="image-carousel">
-            <img src={imageList[currentIndex]} alt={`carousel-img-${currentIndex}`} className="carousel-image" />
+            <div className="carousel-wrapper">
+                {/* Only show the current image */}
+                <img
+                    src={imageList[currentIndex]}
+                    alt={`carousel-img-${currentIndex}`}
+                    className="carousel-image"
+                />
+            </div>
+            
+            <button className="carousel-button prev" onClick={prevImage}>
+                &#8249;
+            </button>
+            <button className="carousel-button next" onClick={nextImage}>
+                &#8250;
+            </button>
         </div>
     );
 }

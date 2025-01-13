@@ -1,0 +1,81 @@
+.reporting-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  //justify-content: center;
+  //align-items: center;
+  //height: 100vh;
+  // margin: 0;
+  background-color: #f4f4f4;
+  padding: 20px;
+}
+
+.reporting-page__layout {
+  //flex: 1; // Takes up remaining space between header and footer
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 20px;
+  padding: 20px;
+}
+
+.reporting__search {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    margin: 0;
+    font-size: 24px;
+  }
+}
+
+.reporting-page__search {
+  padding: 1rem;
+  background-color: #f4f4f4; // Light background for the search section
+  text-align: center;
+  font-size: 1.2rem; // Better readability
+  border-bottom: 1px solid #ddd; // Light border to separate from the map
+}
+
+.reporting-page__report-form {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+// Para pantallas pequeñas
+@media (max-width: 768px) {
+  .reporting-page__layout {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .reporting-page__report-form {
+    padding: 15px;
+  }
+}
+
+// Para pantallas medianas
+@media (min-width: 769px) and (max-width: 1024px) {
+  .reporting-page__layout {
+    padding: 15px;
+  }
+
+  .reporting-page__report-form {
+    padding: 20px;
+  }
+}
+
+// Para pantallas grandes
+@media (min-width: 1025px) {
+  .reporting-page__layout {
+    padding: 20px;
+  }
+
+  .reporting-page__report-form {
+    padding: 30px;
+  }
+}

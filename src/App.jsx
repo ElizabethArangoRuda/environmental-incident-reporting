@@ -1,46 +1,32 @@
-// import { BrowserRouter, Routes, Route} from "react-router-dom";
+import './App.scss';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
-import Gallery from './components/Gallery/Gallery';
-import './App.scss'
+import HomePage from './pages/HomePage/HomePage';
+import MapPage from './pages/MapPage/MapPage';
+import ReportingPage from './pages/ReportingPage/ReportingPage';
+import { useState } from "react";
 
 function App() {
+  const [latitude, setLatitude] = useState(null)
+  const [longitude, setLongitude] = useState(null)
   return (
-  <>
-  <Header />
-  <Gallery />
-<section className="student-list">
-    <div className="student">
-        <div className="student__content">
-            <img 
-                className="student__image" 
-                src="https://img.icons8.com/ios/100/000000/test-account.png" 
-                alt="Test Student Account Image" />
-        </div>
-        <h4 className="student__title">Student Name</h4>
-    </div>
-    <div className="student">
-        <div className="student__content">
-            <img 
-                className="student__image" 
-                src="https://img.icons8.com/ios/100/000000/test-account.png" 
-                alt="Test Student Account Image" />
-        </div>
-        <h4 className="student__title">Student Name</h4>
-    </div>
-    <div className="student">
-        <div className="student__content">
-            <img 
-                className="student__image" 
-                src="https://img.icons8.com/ios/100/000000/test-account.png" 
-                alt="Test Student Account Image" />
-        </div>
-        <h4 className="student__title">Student Name</h4>
-    </div>
-</section>
-<Footer />
-</>
-  )
+    <>
+      <BrowserRouter>
+        <Header />
+          <main>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/map" element={<MapPage setLatitude={setLatitude} setLongitude={setLongitude}/>} />
+              <Route path="/report" element={<ReportingPage setLatitude={setLatitude} setLongitude={setLongitude}/>} />
+              {/* Fallback Route */}
+              <Route path="*" element={<div>404 Page Not Found</div>} />
+            </Routes>
+          </main>
+        <Footer />
+      </BrowserRouter>
+    </>
+  );
 }
 
-export default App
+export default App;

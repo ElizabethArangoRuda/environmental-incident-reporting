@@ -1,14 +1,47 @@
 .image-carousel {
+    position: relative;
     width: 100%;
-    height: 400px; /* Adjust height as needed */
+    max-width: 80%; /* Ajusta el tamaño máximo del carrusel */
+    margin: 0 auto; /* Centra el carrusel */
+    overflow: hidden; /* Esconde las imágenes fuera del contenedor */
+}
+
+.carousel-wrapper {
     display: flex;
+    width: 100%;
     justify-content: center;
-    align-items: center;
-    overflow: hidden;
 }
 
 .carousel-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    width: 80%; /* Ajusta el tamaño de las imágenes a un 80% del contenedor */
+    height: auto; /* Mantiene la relación de aspecto */
+    object-fit: contain; /* Asegura que la imagen se ajuste sin distorsionarse */
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.carousel-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    font-size: 24px;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 1;
+    transition: background-color 0.3s ease;
+}
+
+.carousel-button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.prev {
+    left: 10px;
+}
+
+.next {
+    right: 10px;
 }

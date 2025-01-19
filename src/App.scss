@@ -1,57 +1,39 @@
-body {
-  margin: 0;
-  font-family: 'Arial', sans-serif;
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f4f4f4;
+  padding: 20px;
 }
 
-a {
-  padding: 0.625rem;
-  text-decoration: none;
-  font-weight: bold;
-  color: black;
+.page__container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+}
 
-  &:hover {
-      color: #545454;
+.page__title-section {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    margin: 0;
+    font-size: 28px;
+    text-align: center;
+    color: black;
   }
 }
 
-.student-list {
+.page__component-section {
+  background-color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 30px;
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  padding: 2.1875rem;
-}
-
-.student {
-  width: 19.375rem;
-  height: 18.5rem;
-  margin: 0.625rem;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  background: #ffffff;
-  box-shadow: 3px 3px 3px #aaaaaa;
-  border-radius: 5px;
-  flex-wrap: wrap;
-  border: 2px solid black;
-
-  &__content {
-      flex: 0 0 100%;
-      justify-self: center;
-      text-align: center;
-  }
-
-  &__image {
-      max-width: 100px;
-  }
-
-  &__title {
-      flex: 0 0 100%;
-      text-align: center;
-      border-top: dotted 3px#555555;
-      padding-top: 1.9375rem;
-      font-size: 22px;
-  }
+  flex: 1;
 }

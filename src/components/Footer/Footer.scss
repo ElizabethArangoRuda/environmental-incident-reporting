@@ -1,3 +1,4 @@
+
 .footer {
     background-color: #333;
     color: #fff;
@@ -13,12 +14,14 @@
     }
 
     .footer__section {
-        flex: 1;
+        flex: 1 1 30%;
         margin-right: 40px;
 
         .footer__columns {
             display: flex;
             justify-content: space-between;
+            flex-wrap: wrap;
+            /* Allows columns to pile up in small screens */
             margin-bottom: 20px;
 
             .footer__column {
@@ -75,5 +78,96 @@
                 }
             }
         }
+    }
+}
+
+/* Responsive Media Queries */
+/* Mobile Screens (320px - 480px) */
+@media (max-width: 480px) {
+    .footer__section {
+        flex: 1 1 100%;
+        /* Ocupa todo el ancho disponible */
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+
+    .footer__logos {
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 20px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .footer__logos--icon {
+        width: 32px;
+        height: 32px;
+    }
+
+    .footer__copyright {
+        font-size: 0.8rem;
+        margin-top: 20px;
+    }
+}
+
+/* For tablets (481px - 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    .footer__section {
+        flex: 1 1 45%;
+        /* Los elementos ocupan casi la mitad */
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+
+    .footer__logos {
+        flex-direction: row;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .footer__logos--icon {
+        width: 28px;
+        height: 28px;
+    }
+}
+
+/* For small laptop displays (769px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .footer__section {
+        flex: 1 1 30%;
+        /* 3 columnas en un espacio más grande */
+    }
+
+    .footer__logos {
+        gap: 15px;
+    }
+
+    .footer__logos--icon {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+/* For desktop computer displays (1025px - 1200px) */
+@media (min-width: 1025px) and (max-width: 1200px) {
+    .footer__section {
+        flex: 1 1 30%;
+    }
+
+    .footer__logos--icon {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+/* For extra large screens (1201px and upwards) */
+@media (min-width: 1201px) {
+    .footer__section {
+        flex: 1 1 30%;
+    }
+
+    .footer__logos--icon {
+        width: 32px;
+        height: 32px;
     }
 }

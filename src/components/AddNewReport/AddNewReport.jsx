@@ -4,16 +4,16 @@ import errorIcon from "../../assets/icons/error-24px.svg";
 import ComplaintService from '../../services/ComplaintService'; // Import the service
 import Map from '../Map/Map'; // Import the new Map component
 
-function AddNewReport(/*{ setLatitude, setLongitude }*/) {
+function AddNewReport() {
 
-  // const [coordinates, setCoordinates] = useState({ latitude: null, longitude: null });
+  const [message, setMessage] = useState('');
+  const [isError, setIsError] = useState(false);
 
   const handleMarkerChange = (lat, lng) => {
     setForm((prev) => ({
       ...prev,
       latitude: lat,
       longitude: lng,
-      //coordinates: { latitude: lat, longitude: lng },
     }));
     console.log("Selected coordinates:", { lat, lng });
   };
@@ -44,7 +44,6 @@ function AddNewReport(/*{ setLatitude, setLongitude }*/) {
     media_files: [],
     latitude: 0,
     longitude: 0,
-    //coordinates: { latitude: null, longitude: null },
   });
 
   const [errors, setErrors] = useState({});
@@ -67,27 +66,31 @@ function AddNewReport(/*{ setLatitude, setLongitude }*/) {
       media_files: validFiles,
     }));
     if (files.length !== validFiles.length) {
-      alert("Some files are too large and were not added.");
+      setMessage("Some files are too large and were not added.");
+      setIsError(true);
     }
   };
 
-  // Función para manejar el envío del formulario
+  // Function to handle form submission
   const handleSubmit = async (e) => {
 
     e.preventDefault();
 
     if (!validateForm()) {
-      alert("Please fill in all required fields.");
+      setMessage("Please fill in all requiered fields.");
+      setIsError(true);
       return;
     }
 
     try {
       const response = await ComplaintService.createComplaint(form);
       console.log('Complaint submitted successfully:', response);
-      alert('Complaint submitted successfully!');
+      setMessage("Complaint submitted successfully!");
+      setIsError(false);
     } catch (error) {
       console.error('Error submitting complaint:', error);
-      alert('Failed to submit complaint.');
+      setMessage("Failed to submit complaint.");
+      setIsError(true);
     }
     console.log("Form Submitted:", form);
   };
@@ -100,9 +103,6 @@ function AddNewReport(/*{ setLatitude, setLongitude }*/) {
     if (!form.latitude || !form.longitude) {
       newErrors.coordinates = "Please select a location on the map.";
     }
-    /*if (!form.coordinates.latitude || !form.coordinates.longitude) {
-      newErrors.coordinates = "Please select a location on the map.";
-    }*/
     if (form.contact_phone && !/^\+\d{1,3}\s?\(\d{1,3}\)\s?\d{3}-\d{4}$/.test(form.contact_phone)) {
       newErrors.contact_phone = "Invalid phone number format. Use +1 (212) 555-6789.";
     }
@@ -114,12 +114,11 @@ function AddNewReport(/*{ setLatitude, setLongitude }*/) {
     return Object.keys(newErrors).length === 0;
   };
 
-
   return (
     <div className="add-report">
       <div className="add-report__wrapper">
         <form className="add-report__form" onSubmit={handleSubmit} encType="multipart/form-data">
-          {/* Acordeón de la Dirección */}
+          {/* Direction Accordion */}
           <div className="add-report__container">
             <button
               type="button"
@@ -184,7 +183,7 @@ function AddNewReport(/*{ setLatitude, setLongitude }*/) {
             )}
           </div>
 
-          {/* Acordeón de la Información de contacto */}
+          {/* Accordion Contact Information */}
           <div className="add-report__container">
             <button
               type="button"
@@ -239,7 +238,7 @@ function AddNewReport(/*{ setLatitude, setLongitude }*/) {
             )}
           </div>
 
-          {/* Acordeón de Medios */}
+          {/* Accordion for media */}
           <div className="add-report__media-section">
             <button
               type="button"
@@ -258,7 +257,7 @@ function AddNewReport(/*{ setLatitude, setLongitude }*/) {
                   onChange={handleFileChange}
                 />
 
-                {/* Vista previa de archivos */}
+                {/* Files preview */}
                 {form.media_files && form.media_files.length > 0 && (
                   <div className="add-report__media-preview">
                     <h3>Selected Files:</h3>
@@ -266,20 +265,20 @@ function AddNewReport(/*{ setLatitude, setLongitude }*/) {
                       {Array.from(form.media_files).map((file, index) => (
                         <li key={index}>
                           <span>{file.name}</span>
-                          {/* Vista previa de imágenes */}
+                          {/* Images preview */}
                           {file.type.startsWith("image/") && (
                             <img
                               src={URL.createObjectURL(file)}
                               alt={file.name}
-                              className="add-report__media-preview-img"
+                              className="add-report__media-preview-item"
                             />
                           )}
-                          {/* Vista previa de videos */}
+                          {/* Videos preview */}
                           {file.type.startsWith("video/") && (
                             <video
                               src={URL.createObjectURL(file)}
                               controls
-                              className="add-report__media-preview-video"
+                              className="add-report__media-preview-item"
                             />
                           )}
                         </li>
@@ -288,7 +287,7 @@ function AddNewReport(/*{ setLatitude, setLongitude }*/) {
                   </div>
                 )}
 
-                {/* Validación de archivos */}
+                {/* File's validation */}
                 {errors.media && (
                   <p className="error-message">
                     <img className="error-icon" src={errorIcon} alt="Error" />
@@ -300,19 +299,6 @@ function AddNewReport(/*{ setLatitude, setLongitude }*/) {
             )}
           </div>
 
-          {/* Validación de archivos */
-          /*<button type="submit" className="add-report__submit">
-            Submit Report
-          </button>
-          <div className="add-report__actions-wrapper">
-            <div className="add-report__actions">
-              <button className="btn btn--submit" type="submit" onSubmit={handleSubmit}>
-                Submit Report
-              </button>
-            </div>
-          </div>*/}
-
-          {/* Componente de Mapa */}
           <Map
             onMarkerChange={handleMarkerChange}
           />
@@ -321,6 +307,15 @@ function AddNewReport(/*{ setLatitude, setLongitude }*/) {
               <img className="error-icon" src={errorIcon} alt="Error" />
               {errors.coordinates}
             </p>
+          )}
+
+          {/* Show message only if it exists */}
+          {message && (
+            <div
+              className={`message ${isError ? 'error' : 'success'}`}
+            >
+              {message}
+            </div>
           )}
 
           <div className="add-report__actions-wrapper">

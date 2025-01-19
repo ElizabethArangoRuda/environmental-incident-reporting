@@ -1,9 +1,9 @@
 .image-carousel {
     position: relative;
     width: 100%;
-    max-width: 80%; /* Ajusta el tamaño máximo del carrusel */
-    margin: 0 auto; /* Centra el carrusel */
-    overflow: hidden; /* Esconde las imágenes fuera del contenedor */
+    max-width: 80%; /* Set the maximum size of the carousel */
+    margin: 0 auto; /* Center the carrusel */
+    overflow: hidden; /* Hide images outside the container */
 }
 
 .carousel-wrapper {
@@ -13,9 +13,9 @@
 }
 
 .carousel-image {
-    width: 80%; /* Ajusta el tamaño de las imágenes a un 80% del contenedor */
-    height: auto; /* Mantiene la relación de aspecto */
-    object-fit: contain; /* Asegura que la imagen se ajuste sin distorsionarse */
+    width: 80%; /* Resize images to 80% of the container */
+    height: auto; /* Maintains aspect ratio */
+    object-fit: contain; /* Ensures that the image fits without distorting */
     opacity: 1;
     transition: opacity 0.5s ease-in-out;
 }

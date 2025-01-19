@@ -10,8 +10,8 @@ function MapPage({ setLatitude, setLongitude }) {
   useEffect(() => {
     const fetchIssues = async () => {
       try {
-        const issuesData = await ComplaintService.getAllComplaints(); // Llamamos al servicio
-        setIssues(issuesData); // Establecemos las quejas obtenidas en el estado
+        const issuesData = await ComplaintService.getAllComplaints(); // Calling the service
+        setIssues(issuesData); // Establish the complaints obtained in the state
       } catch (error) {
         console.error('Error fetching issues:', error);
       }

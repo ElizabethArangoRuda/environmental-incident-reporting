@@ -10,7 +10,7 @@ class ComplaintService {
       return response.data;
     } catch (error) {
       console.error('Error fetching issues:', error);
-      throw error; // Lanza el error para manejarlo más arriba si es necesario
+      throw error; // Throw the error to handle it higher if necessary
     }
   }
 
@@ -37,7 +37,7 @@ class ComplaintService {
         formData.append('media_files', file);
       });
 
-      // Envía la solicitud POST
+      // Send the POST request
       const response = await axios.post(`${url}/api/complaints/anonymous2`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',

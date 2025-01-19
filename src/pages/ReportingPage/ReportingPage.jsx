@@ -8,11 +8,11 @@ function ReportingPage() {
     <>
       <article className="reporting-page">
         <div className="reporting-page__layout">
-          <section className="reporting__search">
+          <section className="reporting-page__search">
             <h2>Report Environmental Issue</h2>
           </section>
           <section className="reporting-page__report-form">
-            <AddNewReport /> {/* Renderiza el formulario aquí */}
+            <AddNewReport /> {/* Rendering the form */}
           </section>
         </div>
       </article>

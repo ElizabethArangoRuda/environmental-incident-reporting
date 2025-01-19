@@ -93,19 +93,11 @@ Endpoints
       "longitude": "-89.6501000"
    }
 
-•	`PUT /incidents/:id`: Update an incident
-•	`DELETE /incidents/:id`: Delete an incident
-
-
 ### Sitemap
 
 1. **Home Page**: Displays an introduction with Colombian imagery and a button to access the map.
 2. **Map Page**: Interactive map displaying reported incidents and an option to add reports.
 3. **Report Form Page**: Form to input incident details, including category, location, and multimedia uploads.
-4. **Incident Details Page**: Shows details of a specific report selected from the map.
-
-### Mockups
-
  
 ### Data
 
@@ -136,9 +128,6 @@ Endpoints
 3. Install dependencies:
    ```bash
    npm install
-   npm install react-router-dom
-   npm install axios
-   npm install -g sass
    ```
 4. Start the development server:
    ```bash

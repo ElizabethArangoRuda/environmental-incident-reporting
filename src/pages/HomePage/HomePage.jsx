@@ -1,17 +1,11 @@
 import { useState } from 'react';
 import './HomePage.scss';
-import Header from '../../components/Header/Header';
-import Footer from '../../components/Footer/Footer';
 import Gallery from '../../components/Gallery/Gallery';
 import { useNavigate } from 'react-router-dom';
 
 function HomePage() {
   const [isFilterPanelVisible, setIsFilterPanelVisible] = useState(false);
 
-  // Navigate to the Maps page
-  /*const handleNavigateToMaps = () => {
-    window.location.href = '/map'; // Update the path as per your routing setup
-  };*/
   const navigate = useNavigate();
   const handleNavigateToMaps = () => navigate('/map');
 

@@ -32,22 +32,20 @@ The **Environmental Incident Reporting App** is a platform for reporting and vis
 
 ### Tech Stack
 
-•	**Frontend**: React (web) or React Native (mobile)
+•	**Frontend**: React (web)
 •	**Backend**: Node.js with Express.js
 •	**Database**: relational database MySQL
-•	**Mapping Tools**: Leaflet or Google Maps API
-•	**Cloud Storage**: AWS S3 or Firebase
+•	**Mapping Tools**: OpenStreetMap
 
 ### APIs
 
 API
-•	**Map Integration**: Google Maps API or OpenStreetMap
+•	**Map Integration**: OpenStreetMap
 •	**Geolocation**: HTML5 Geolocation API
-•	**File Storage**: Firebase or AWS for multimedia
+•	**File Storage**: Multer
 
 Endpoints
-•	`GET /incidents`: Fetch all incidents for the map
-•	`POST /incidents`: Submit a new incident
+•	`POST /complaints/anonymous`: Submit a new incident
 
    http://localhost:8080/api/complaints/anonymous
 
@@ -77,7 +75,7 @@ Endpoints
 
 
 
-•	`GET /incidents/:id`: Retrieve incident details
+•	`GET /complaints/anonymous/`: Retrieve incident details
 
    http://localhost:8080/api/complaints/anonymous
    

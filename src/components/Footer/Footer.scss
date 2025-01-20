@@ -86,7 +86,7 @@
 @media (max-width: 480px) {
     .footer__section {
         flex: 1 1 100%;
-        /* Ocupa todo el ancho disponible */
+        /* Takes up the entire available width */
         margin-right: 0;
         margin-bottom: 20px;
     }
@@ -114,7 +114,7 @@
 @media (min-width: 481px) and (max-width: 768px) {
     .footer__section {
         flex: 1 1 45%;
-        /* Los elementos ocupan casi la mitad */
+        /* The elements occupy almost half */
         margin-right: 0;
         margin-bottom: 20px;
     }
@@ -135,7 +135,7 @@
 @media (min-width: 769px) and (max-width: 1024px) {
     .footer__section {
         flex: 1 1 30%;
-        /* 3 columnas en un espacio más grande */
+        /* 3 columns in a larger space */
     }
 
     .footer__logos {

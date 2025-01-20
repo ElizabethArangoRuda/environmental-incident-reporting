@@ -38,7 +38,7 @@ class ComplaintService {
       });
 
       // Send the POST request
-      const response = await axios.post(`${url}/api/complaints/anonymous2`, formData, {
+      const response = await axios.post(`${url}/api/complaints/anonymous`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

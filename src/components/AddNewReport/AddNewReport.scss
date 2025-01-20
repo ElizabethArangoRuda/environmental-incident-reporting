@@ -33,13 +33,12 @@
   .add-report__button:hover {
     background-color: #3a9d91; /* Darker ocean green for hover effect */
   }
-  
+
   .add-report__container {
     width: 100%;
     display: flex;
     flex-direction: column;
   }
-  
   
   .add-report__input {
     width: 100%; /* Occupy full width */
@@ -67,9 +66,6 @@
     height: 16px;
     margin-right: 5px;
   }
-  
-  
-  
   
   .add-report__textarea,
   .add-report__select {
@@ -119,7 +115,6 @@
   .add-report__map {
     height: 20rem;
   }
-  
   
   .add-report__media-preview {
     display: flex;

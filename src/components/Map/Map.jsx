@@ -73,7 +73,7 @@ function Map({ issues = [], setLatitude, setLongitude, onMarkerChange }) {
       const markers = issues.map((issue) => {
         const marker = L.marker([issue.latitude, issue.longitude], {
           icon: getCategoryIcon(issue.category),
-        }).addTo(mapInstance.current); // Crear un marcador
+        }).addTo(mapInstance.current); // Create a bookmark
         marker.bindPopup(`
       <strong>Category:</strong> ${issue.category}<br>
       <strong>Description:</strong> ${issue.description}
